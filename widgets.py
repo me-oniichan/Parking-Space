@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import font
+from tkinter import ttk
+
 HERO_BACKGROUND = "#7f3bff"
 HERO_FOREGROUND = "#f5f0ff"
 ACTIVE_BG = "#b187ff"
@@ -37,7 +39,7 @@ class HeroButton(tk.Canvas):
         self.bind("<ButtonRelease-1>", self.leave)
 
     def enter(self, event):
-        self["bg"] = self.hoverbg
+        self.config(bg=self.hoverbg, relief="sunken")
         self.itemconfigure(self.arc1, fill=self.hoverbg, outline = self.hoverbg)
         self.itemconfigure(self.arc2, fill=self.hoverbg, outline = self.hoverbg)
     
@@ -50,3 +52,8 @@ class HeroButton(tk.Canvas):
         self["bg"] = self.activebg
         self.itemconfigure(self.arc1, fill=self.activebg, outline = self.activebg)
         self.itemconfigure(self.arc2, fill=self.activebg, outline = self.activebg)
+
+class Login(tk.Frame):
+    def __init__(self, master):
+        super().__init__(master=master, bg="#434343")
+        
