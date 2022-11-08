@@ -39,7 +39,7 @@ class HeroButton(tk.Canvas):
         self.bind("<ButtonRelease-1>", self.leave)
 
     def enter(self, event):
-        self.config(bg=self.hoverbg, relief="sunken")
+        self.config(bg=self.hoverbg)
         self.itemconfigure(self.arc1, fill=self.hoverbg, outline = self.hoverbg)
         self.itemconfigure(self.arc2, fill=self.hoverbg, outline = self.hoverbg)
     
@@ -52,8 +52,31 @@ class HeroButton(tk.Canvas):
         self["bg"] = self.activebg
         self.itemconfigure(self.arc1, fill=self.activebg, outline = self.activebg)
         self.itemconfigure(self.arc2, fill=self.activebg, outline = self.activebg)
+    
+class Entry(tk.Frame):
+    def __init__(self,master, **kwargs):
+        super().__init__(master, bg = kwargs["bg"])
+        self.entry = tk.Entry(self, **kwargs)
+        self.entry.pack()
+        tk.Frame(self, height=1, bg=HERO_BACKGROUND).pack(fill=tk.X)
 
 class Login(tk.Frame):
-    def __init__(self, master):
-        super().__init__(master=master, bg="#434343")
-        
+    def __init__(self,fg, **kwargs):
+        super().__init__(**kwargs)
+        self.font = font.Font(family="Consolas", size=10)
+        self.userFrame = tk.Frame(self, bg=kwargs["bg"])
+        self.userFrame.pack(pady=3)
+
+        tk.Label(self.userFrame, text="Username : ", bg=kwargs["bg"], foreground=fg, font=self.font).pack(side=tk.LEFT)
+        # self.username = tk.Entry(self.userFrame, bg=kwargs["bg"], fg=fg, relief='flat', insertbackground=fg, font=self.font)
+        self.username  = Entry(self.userFrame, bg=kwargs["bg"], fg=fg, relief='flat', insertbackground=fg, font=self.font)
+        self.username.pack(side=tk.RIGHT)
+
+        self.passFrame = tk.Frame(self, bg=kwargs["bg"])
+        self.passFrame.pack(pady=3)
+
+        tk.Label(self.passFrame, text="Password : ", bg=kwargs["bg"], foreground=fg, font=self.font).pack(side=tk.LEFT)
+        self.passname  = Entry(self.passFrame, bg=kwargs["bg"], fg=fg, relief='flat', insertbackground=fg, font=self.font, show="*")
+        self.passname.pack(side=tk.RIGHT)
+
+        self.pack(side=tk.BOTTOM, ipadx=15)
