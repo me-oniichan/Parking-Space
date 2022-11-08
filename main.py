@@ -28,21 +28,22 @@ class StartScreen(tk.Frame):
         self.pack(fill=tk.BOTH, expand=True)
 
         self.buttonFrame = tk.Frame(self, bg="#424242", height=HEIGHT)
-        self.buttonFrame.pack(anchor="center", expand=True, side=tk.LEFT)
+        self.buttonFrame.pack(anchor="center", expand=True, side=tk.LEFT, fill=tk.Y)
 
+        self.tophalf = tk.Frame(self.buttonFrame, bg="#424242")
+        self.tophalf.pack(pady=(100,0))
         self.logo = Image.open("images/parking-logo.png").resize((int(250*1.5), 250))
         self.logo = ImageTk.PhotoImage(self.logo)
-        tk.Label(self.buttonFrame, image=self.logo, bg = self.buttonFrame["bg"]).pack()
+        tk.Label(self.tophalf, image=self.logo, bg = self.tophalf["bg"]).pack()
 
-        self.formSpace = tk.Frame(self.buttonFrame, bg="#424242", height=170, width=300)
+        self.formSpace = tk.Frame(self.buttonFrame, bg="#424242", width=300)
         
-        self.pack_propagate(0)
-        self.formSpace.pack(side=tk.BOTTOM, pady=10)
+        self.formSpace.pack(side=tk.BOTTOM, expand=True, pady=10, anchor="n")
 
-        self.login = widgets.HeroButton(self.buttonFrame, "Login", size=12, command=self.login_clicked)
+        self.login = widgets.HeroButton(self.tophalf, "Login", size=12, command=self.login_clicked)
         self.login.pack(side=tk.LEFT, padx=30)
 
-        self.signup = widgets.HeroButton(self.buttonFrame, "Signup", size=12, command=self.signup_clicked)
+        self.signup = widgets.HeroButton(self.tophalf, "Signup", size=12, command=self.signup_clicked)
         self.signup.pack(side=tk.LEFT)
         
         self.bgimg = Image.open("images/parking.png")
@@ -54,10 +55,10 @@ class StartScreen(tk.Frame):
         
         
     def show_login(self):
-        self.loginForm.pack(side=tk.BOTTOM, ipadx=20, pady=10)
+        self.loginForm.pack(ipadx=20, pady=10)
         self.log=1
     def show_signup(self):
-        self.signupForm.pack(side=tk.BOTTOM, ipadx=20, pady=10)
+        self.signupForm.pack(ipadx=20, pady=10)
         self.sign=1
     def collapse_login(self):
         self.loginForm.pack_forget()
