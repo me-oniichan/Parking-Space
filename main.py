@@ -20,6 +20,11 @@ except ImportError:
 class StartScreen(tk.Frame):
     def __init__(self, master):
         super().__init__(master, bg = "#424242", height=HEIGHT)
+
+        #utility vars
+        self.log = 0
+        self.sign = 0
+
         self.pack(fill=tk.BOTH, expand=True)
 
         self.buttonFrame = tk.Frame(self, bg="#424242", height=HEIGHT)
@@ -29,13 +34,15 @@ class StartScreen(tk.Frame):
         self.logo = ImageTk.PhotoImage(self.logo)
         tk.Label(self.buttonFrame, image=self.logo, bg = self.buttonFrame["bg"]).pack()
 
-        self.formSpace = tk.Frame(self.buttonFrame)
+        self.formSpace = tk.Frame(self.buttonFrame, bg="#424242", height=170, width=300)
+        
+        self.pack_propagate(0)
         self.formSpace.pack(side=tk.BOTTOM, pady=10)
 
-        self.login = widgets.HeroButton(self.buttonFrame, "Login")
+        self.login = widgets.HeroButton(self.buttonFrame, "Login", size=12, command=self.login_clicked)
         self.login.pack(side=tk.LEFT, padx=30)
 
-        self.signup = widgets.HeroButton(self.buttonFrame, "Signup")
+        self.signup = widgets.HeroButton(self.buttonFrame, "Signup", size=12, command=self.signup_clicked)
         self.signup.pack(side=tk.LEFT)
         
         self.bgimg = Image.open("images/parking.png")
@@ -43,7 +50,30 @@ class StartScreen(tk.Frame):
         tk.Label(self, image=self.bgimg, borderwidth=0, width=600).pack(side=tk.RIGHT)
 
         self.loginForm = widgets.Login(master=self.formSpace, fg="#fafafa",bg = "#222222")
+        self.signupForm = widgets.Signup(master=self.formSpace, fg="#fafafa",bg = "#222222")
         
+        
+    def show_login(self):
+        self.loginForm.pack(side=tk.BOTTOM, ipadx=20, pady=10)
+        self.log=1
+    def show_signup(self):
+        self.signupForm.pack(side=tk.BOTTOM, ipadx=20, pady=10)
+        self.sign=1
+    def collapse_login(self):
+        self.loginForm.pack_forget()
+        self.log=0
+    def collapse_signup(self):
+        self.signupForm.pack_forget()
+        self.sign=0
+    
+    def login_clicked(self):
+        if self.sign: self.collapse_signup()
+        if self.log: self.collapse_login()
+        else: self.show_login()
+    def signup_clicked(self):
+        if self.log: self.collapse_login()
+        if self.sign: self.collapse_signup()
+        else: self.show_signup()
 
 if __name__ == "__main__":
     try:

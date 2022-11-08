@@ -11,12 +11,14 @@ HOVER = "#965eff"
 class HeroButton(tk.Canvas):
     def __init__(self, master, text="Click ME", height=70, width=150, bg=HERO_BACKGROUND, fg=HERO_FOREGROUND, command=None, activebg=ACTIVE_BG, hoverbg = HOVER, size = 12):
         super().__init__(master=master, height=height, width=width,
-                         borderwidth=0, relief=tk.FLAT, bg=bg, command=command, highlightthickness=0, cursor="hand2")
+                         borderwidth=0, relief=tk.FLAT, bg=bg, highlightthickness=0, cursor="hand2")
         
         self.radius = height/2
         self.activebg = activebg
         self.hoverbg = hoverbg
         self.bg = bg
+        self.font = font.Font(family="Helvetica", weight=font.BOLD, size=size)
+        self.commad = command
 
         self.create_rectangle(0, 0, self.radius, height,
                               fill=master["bg"], width=0)
@@ -31,7 +33,7 @@ class HeroButton(tk.Canvas):
                         start=270, extent=180, width=0, fill=bg, outline=bg)
 
         self.create_text(width/2, height/2, fill=fg, text=text,
-                         font=font.Font(name="Helvetica", weight=font.BOLD, size=size))
+                         font=self.font)
 
         self.bind("<Enter>", self.enter)
         self.bind("<Leave>", self.leave)
@@ -52,6 +54,8 @@ class HeroButton(tk.Canvas):
         self["bg"] = self.activebg
         self.itemconfigure(self.arc1, fill=self.activebg, outline = self.activebg)
         self.itemconfigure(self.arc2, fill=self.activebg, outline = self.activebg)
+        self.commad()
+        
     
 class Entry(tk.Frame):
     def __init__(self,master, **kwargs):
@@ -68,7 +72,6 @@ class Login(tk.Frame):
         self.userFrame.pack(pady=3)
 
         tk.Label(self.userFrame, text="Username : ", bg=kwargs["bg"], foreground=fg, font=self.font).pack(side=tk.LEFT)
-        # self.username = tk.Entry(self.userFrame, bg=kwargs["bg"], fg=fg, relief='flat', insertbackground=fg, font=self.font)
         self.username  = Entry(self.userFrame, bg=kwargs["bg"], fg=fg, relief='flat', insertbackground=fg, font=self.font)
         self.username.pack(side=tk.RIGHT)
 
@@ -79,4 +82,15 @@ class Login(tk.Frame):
         self.passname  = Entry(self.passFrame, bg=kwargs["bg"], fg=fg, relief='flat', insertbackground=fg, font=self.font, show="*")
         self.passname.pack(side=tk.RIGHT)
 
-        self.pack(side=tk.BOTTOM, ipadx=15)
+        HeroButton(master=self, text="Submit", height=35, width=100, size=10).pack(side=tk.BOTTOM, pady=(10,5))
+
+
+class Signup(Login):
+    def __init__(self, fg, **kwargs):
+        super().__init__(fg, **kwargs)
+
+        self.confirmPassFrame = tk.Frame(self, bg=kwargs["bg"])
+        self.confirmPassFrame.pack(pady=3)
+        tk.Label(self.confirmPassFrame, text="Confirm   \nPassword : ", bg=kwargs["bg"], foreground=fg, font=self.font).pack(side=tk.LEFT)
+        self.confirmPass = Entry(self.confirmPassFrame, bg=kwargs["bg"], fg=fg, relief='flat', insertbackground=fg, font=self.font, show="*")
+        self.confirmPass.pack(side=tk.RIGHT)
