@@ -94,3 +94,23 @@ class Signup(Login):
         tk.Label(self.confirmPassFrame, text="Confirm   \nPassword : ", bg=kwargs["bg"], foreground=fg, font=self.font).pack(side=tk.LEFT)
         self.confirmPass = Entry(self.confirmPassFrame, bg=kwargs["bg"], fg=fg, relief='flat', insertbackground=fg, font=self.font, show="*")
         self.confirmPass.pack(side=tk.RIGHT)
+
+class Card(tk.Frame):
+    def __init__(self, title, isavailable, id,**kwargs):
+        super().__init__(**kwargs, width=900, height=85)
+        self.pack_propagate(0)
+        self.title = tk.Label(self, text=title, font= font.Font(family="Helvetica", size=17), fg="#aaeeaa", bg=kwargs["bg"])
+        self.title.pack(anchor="w", padx=(20,0), pady=(5,0))
+
+        self.bg = "#003d0a" if isavailable else "#3d0000"
+        self.fg = "#77ff77" if isavailable else "#ff7777"
+        self.text = "Available" if isavailable else "Not Available"
+
+        self.wrapper = tk.Frame(self, bg=kwargs["bg"])
+        self.wrapper.pack(anchor="w", pady=(5,0))
+
+        self.available = HeroButton(self.wrapper, text=self.text, size=8, bg=self.bg, fg=self.fg, height=30, width=100, activebg=self.bg, hoverbg=self.bg)
+        self.available.pack(side=tk.LEFT, padx=(20,8))
+
+        self.parkid = HeroButton(self.wrapper, text="ID : PID", size=8, bg="#7f37b0", activebg="#7f37b0", hoverbg="#7f37b0", fg=HERO_FOREGROUND, height=30, width=80)
+        self.parkid.pack(side=tk.LEFT)

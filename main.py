@@ -76,6 +76,17 @@ class StartScreen(tk.Frame):
         if self.sign: self.collapse_signup()
         else: self.show_signup()
 
+class AvailableParking(tk.Frame):
+    def __init__(self, master):
+        super().__init__(master, bg = "#323232", height=HEIGHT)
+        self.pack(fill=tk.BOTH, expand=True, ipadx=20, ipady=20)
+
+        self.card = widgets.Card(title="Block 34", isavailable=1, id=0,master=self, bg="#424242")
+        self.card.pack(padx=5, pady=15)
+        self.card = widgets.Card(title="Block 34", isavailable=0, id=0,master=self, bg="#424242")
+        self.card.pack(padx=5, pady=15)
+
+
 if __name__ == "__main__":
     try:
         with open("password.txt") as f: password = f.read()
@@ -92,5 +103,6 @@ if __name__ == "__main__":
     root.resizable(False, False)
     root.config(bg="#424242")
 
-    start = StartScreen(root)
+    # start = StartScreen(root)
+    paking = AvailableParking(master=root)
     root.mainloop()
