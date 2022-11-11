@@ -146,10 +146,16 @@ class Header(tk.Frame):
         super().__init__(master, bg=self.bg, height=50)
         self.pack_propagate(0)
         self.pack(fill=tk.X)
-        self.username = tk.Label(self, bg=self.bg, text=f"User ID : {user}", fg="#efefef", font=font.Font(family="Impact", size=12))
+        self.username = tk.Label(self, bg=self.bg, text=f"User ID : {user}", fg="#efefef",
+                                 font=font.Font(family="Impact", size=12))
         self.username.pack(side=tk.LEFT, padx=20)
 
-        self.blocks = ["","All","32", "34", "36", "37", "38", "54", "56", "58", "60"]
+        self.onlyOwned = tk.IntVar()
+        self.checkBox = ttk.Checkbutton(self, variable=self.onlyOwned, text="Only Owned?", width=12,
+                                        style="O.TCheckbutton", command=lambda: master.refresh_view(master.switch))
+        self.checkBox.pack(side="right", padx=5)
+
+        self.blocks = ["", "All", "32", "34", "36", "37", "38", "54", "56", "58", "60"]
         self.value = tk.StringVar()
         self.value.set('All')
 

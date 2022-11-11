@@ -88,18 +88,46 @@ class StartScreen(tk.Frame):
 class AvailableParking(tk.Frame):
     def __init__(self, master):
         super().__init__(master, bg="#323232", height=HEIGHT)
+        self.card = None
         self.pack(fill=tk.BOTH, expand=True, ipadx=20, ipady=20)
 
         self.head = widgets.Header(self, user="12114156")
         self.head.pack()
 
-        self.card = widgets.Card(title="Block 34", isavailable=1, id=0, master=self)
+        self.viewFrame = tk.Frame(self, bg="#323232")
+        self.viewFrame.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
+        self.switch = 0
+        self.refresh_view(self.switch)
+
+    def refresh_view(self, switch):
+        self.viewFrame.destroy()
+        self.viewFrame = tk.Frame(self, bg="#323232")
+        self.viewFrame.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
+        if switch:
+            self.populate()
+            self.switch = 0
+        else:
+            self.dummy()
+            self.switch = 1
+
+    def populate(self):
+        self.card = widgets.Card(title="Block 34", isavailable=1, id=0, master=self.viewFrame)
         self.card.pack(padx=5, pady=10)
 
-        self.card = widgets.Card(title="Block 34", isavailable=0, id=0, master=self)
+        self.card = widgets.Card(title="Block 34", isavailable=0, id=0, master=self.viewFrame)
         self.card.pack(padx=5, pady=10)
 
-        self.card = widgets.Card(title="Block 34", isavailable=-1, id=0, master=self)
+        self.card = widgets.Card(title="Block 34", isavailable=-1, id=0, master=self.viewFrame)
+        self.card.pack(padx=5, pady=10)
+
+    def dummy(self):
+        self.card = widgets.Card(title="Block 34", isavailable=-1, id=0, master=self.viewFrame)
+        self.card.pack(padx=5, pady=10)
+
+        self.card = widgets.Card(title="Block 34", isavailable=1, id=0, master=self.viewFrame)
+        self.card.pack(padx=5, pady=10)
+
+        self.card = widgets.Card(title="Block 34", isavailable=-0, id=0, master=self.viewFrame)
         self.card.pack(padx=5, pady=10)
 
 
@@ -122,6 +150,7 @@ if __name__ == "__main__":
 
     style = ttk.Style()
     style.configure("O.TMenubutton", background="#444444", foreground="#ffffff", borderwidth=0, relief="flat", width=5)
+    style.configure(("O.TCheckbutton"), background="#444444", foreground="#ffffff", borderwidth=0, relief="flat")
 
     # start = StartScreen(root)
     paking = AvailableParking(master=root)
