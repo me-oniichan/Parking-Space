@@ -18,6 +18,9 @@ except ImportError:
         exit()
 
 
+WIDTH = 1080
+HEIGHT = 680
+
 class StartScreen(tk.Frame):
     def __init__(self, master):
         super().__init__(master, bg="#424242", height=HEIGHT)
@@ -136,12 +139,9 @@ if __name__ == "__main__":
         with open("password.txt") as f:
             password = f.read()
         cursor = connection.connect(user="root", password=password, database="Parking")
-    except:
+    except Exception as e:
         msg.showerror("Connection Error", message="Unable to connect MySQL")
         exit()
-
-    WIDTH = 1080
-    HEIGHT = 680
 
     root = tk.Tk()
     root.geometry(f"{WIDTH}x{HEIGHT}")

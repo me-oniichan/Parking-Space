@@ -6,7 +6,7 @@ HERO_BACKGROUND = "#7f3bff"
 HERO_FOREGROUND = "#f5f0ff"
 ACTIVE_BG = "#b187ff"
 HOVER = "#965eff"
-
+USER = None
 
 class HeroButton(tk.Canvas):
     def __init__(self, master, text="Click ME", height=70, width=150, bg=HERO_BACKGROUND, fg=HERO_FOREGROUND,
@@ -53,9 +53,12 @@ class HeroButton(tk.Canvas):
 
     def click(self, event):
         self["bg"] = self.activebg
-        self.itemconfigure(self.arc1, fill=self.activebg, outline=self.activebg)
-        self.itemconfigure(self.arc2, fill=self.activebg, outline=self.activebg)
-        if self.command: self.command()
+        self.itemconfigure(self.arc1, fill=self.activebg,
+                           outline=self.activebg)
+        self.itemconfigure(self.arc2, fill=self.activebg,
+                           outline=self.activebg)
+        if self.command:
+            self.command()
 
 
 class Entry(tk.Frame):
@@ -73,7 +76,8 @@ class Login(tk.Frame):
         self.userFrame = tk.Frame(self, bg=kwargs["bg"])
         self.userFrame.pack(pady=3)
 
-        tk.Label(self.userFrame, text="Username : ", bg=kwargs["bg"], foreground=fg, font=self.font).pack(side=tk.LEFT)
+        tk.Label(self.userFrame, text="Username : ",
+                 bg=kwargs["bg"], foreground=fg, font=self.font).pack(side=tk.LEFT)
         self.username = Entry(self.userFrame, bg=kwargs["bg"], fg=fg, relief='flat', insertbackground=fg,
                               font=self.font)
         self.username.pack(side=tk.RIGHT)
@@ -81,12 +85,14 @@ class Login(tk.Frame):
         self.passFrame = tk.Frame(self, bg=kwargs["bg"])
         self.passFrame.pack(pady=3)
 
-        tk.Label(self.passFrame, text="Password : ", bg=kwargs["bg"], foreground=fg, font=self.font).pack(side=tk.LEFT)
+        tk.Label(self.passFrame, text="Password : ",
+                 bg=kwargs["bg"], foreground=fg, font=self.font).pack(side=tk.LEFT)
         self.passname = Entry(self.passFrame, bg=kwargs["bg"], fg=fg, relief='flat', insertbackground=fg,
                               font=self.font, show="*")
         self.passname.pack(side=tk.RIGHT)
 
-        HeroButton(master=self, text="Submit", height=35, width=100, size=10).pack(side=tk.BOTTOM, pady=(10, 5))
+        HeroButton(master=self, text="Submit", height=35, width=100,
+                   size=10).pack(side=tk.BOTTOM, pady=(10, 5))
 
 
 class Signup(Login):
@@ -124,12 +130,12 @@ class Card(tk.Frame):
         super().__init__(**kwargs, width=900, height=85, bg=self.cardbg)
         self.pack_propagate(False)
 
-        self.title = tk.Label(self, text=title, font=font.Font(family="Helvetica", size=17), fg=self.fg,
-                              bg=self.cardbg)
-        self.title.pack(anchor="w", padx=(20, 0), pady=(5, 0))
-
         self.wrapper = tk.Frame(self, bg=self.cardbg)
-        self.wrapper.pack(anchor="w", pady=(5, 0))
+        self.wrapper.pack(side=tk.LEFT, pady=(0, 0))
+
+        self.title = tk.Label(self.wrapper, text=title, font=font.Font(family="Helvetica", size=15), fg=self.fg,
+                              bg=self.cardbg)
+        self.title.pack(anchor="w", padx=(20, 0), pady=(0, 5))
 
         self.available = HeroButton(self.wrapper, text=self.text, size=8, bg=self.bg, fg=self.fg, height=30, width=100,
                                     activebg=self.bg, hoverbg=self.bg)
@@ -138,6 +144,16 @@ class Card(tk.Frame):
         self.parkid = HeroButton(self.wrapper, text="ID : PID", size=8, bg="#7f37b0", activebg="#7f37b0",
                                  hoverbg="#7f37b0", fg=HERO_FOREGROUND, height=30, width=80)
         self.parkid.pack(side=tk.LEFT)
+
+
+        if isavailable == -1:
+            self.actionButton = tk.Button(self, text="Cancel", bg="#ee4444", fg="#eeeeee", activebackground="#ee4444", activeforeground="#eeeeee")
+        elif isavailable == 0:
+            self.actionButton = tk.Button(self, text="Book", cursor="X_cursor", state=tk.DISABLED, relief=tk.SUNKEN)
+        else: self.actionButton= tk.Button(self, text="Book", bg="#55cc55", fg="black", activebackground="#55cc55", activeforeground="black")
+        
+        self.actionButton.config(font="Helvetica 10 bold", width=7, height=2)
+        self.actionButton.pack(side=tk.RIGHT, padx=10)
 
 
 class Header(tk.Frame):
@@ -155,7 +171,8 @@ class Header(tk.Frame):
                                         style="O.TCheckbutton", command=lambda: master.refresh_view(master.switch))
         self.checkBox.pack(side="right", padx=5)
 
-        self.blocks = ["", "All", "32", "34", "36", "37", "38", "54", "56", "58", "60"]
+        self.blocks = ["", "All", "32", "34", "36",
+                       "37", "38", "54", "56", "58", "60"]
         self.value = tk.StringVar()
         self.value.set('All')
 
