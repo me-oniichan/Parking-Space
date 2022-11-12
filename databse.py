@@ -1,12 +1,20 @@
-import mysql.connector as connect
-
-with open("password.txt") as f: password = f.read()
-
-conn = connect.connect(user = "root", password=password)
-cur = conn.cursor()
+import tkinter.messagebox as msg
+import os
 try:
-    cur.execute("create database Parking;")
-except:
-    pass
+    import mysql.connector as connection
+except ImportError:
+    # if mysql connector not installed
+    err = msg.askyesno("Connection Error", message="mysql-connector not installed, Do you want to install?")
+    if err:
+        ins = os.system('pip install mysql-connector-python')
+    else:
+        exit()
 
-cur.execute("use Parking;")
+try:
+    with open("password.txt") as f:
+        password = f.read()
+    db = connection.connect(user="root", password=password, database="Parking")
+    cursor = db.cursor()
+except Exception as e:
+    msg.showerror("Connection Error", message="Unable to connect MySQL")
+    exit()

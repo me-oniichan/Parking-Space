@@ -1,12 +1,12 @@
 import tkinter as tk
 from tkinter import font
 from tkinter import ttk
+import utils
 
 HERO_BACKGROUND = "#7f3bff"
 HERO_FOREGROUND = "#f5f0ff"
 ACTIVE_BG = "#b187ff"
 HOVER = "#965eff"
-USER = None
 
 class HeroButton(tk.Canvas):
     def __init__(self, master, text="Click ME", height=70, width=150, bg=HERO_BACKGROUND, fg=HERO_FOREGROUND,
@@ -70,7 +70,7 @@ class Entry(tk.Frame):
 
 
 class Login(tk.Frame):
-    def __init__(self, fg, **kwargs):
+    def __init__(self, command, fg, **kwargs):
         super().__init__(**kwargs)
         self.font = font.Font(family="Consolas", size=10)
         self.userFrame = tk.Frame(self, bg=kwargs["bg"])
@@ -91,13 +91,13 @@ class Login(tk.Frame):
                               font=self.font, show="*")
         self.passname.pack(side=tk.RIGHT)
 
-        HeroButton(master=self, text="Submit", height=35, width=100,
+        self.submit = HeroButton(master=self, text="Submit", height=35, width=100, command = command,
                    size=10).pack(side=tk.BOTTOM, pady=(10, 5))
 
 
 class Signup(Login):
-    def __init__(self, fg, **kwargs):
-        super().__init__(fg, **kwargs)
+    def __init__(self, command, fg, **kwargs):
+        super().__init__(command, fg, **kwargs)
 
         self.confirmPassFrame = tk.Frame(self, bg=kwargs["bg"])
         self.confirmPassFrame.pack(pady=3)
@@ -157,7 +157,7 @@ class Card(tk.Frame):
 
 
 class Header(tk.Frame):
-    def __init__(self, master, user="12114156"):
+    def __init__(self, master, user, occupied):
         self.bg = "#262626"
         super().__init__(master, bg=self.bg, height=50)
         self.pack_propagate(0)
@@ -179,3 +179,6 @@ class Header(tk.Frame):
         self.option = ttk.OptionMenu(self, self.value, *self.blocks)
         self.option.pack(side=tk.RIGHT, padx=10)
         self.option.config(style="O.TMenubutton", text="Choose Block")
+
+        self.occupied = tk.Label(self, text=f"Occupied : {occupied}/3", bg=self.bg, fg="#ffffff", font="Impact 11")
+        self.occupied.pack(side=tk.RIGHT, padx=10)
