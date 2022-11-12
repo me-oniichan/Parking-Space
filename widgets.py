@@ -141,7 +141,7 @@ class Card(tk.Frame):
                                     activebg=self.bg, hoverbg=self.bg)
         self.available.pack(side=tk.LEFT, padx=(20, 8))
 
-        self.parkid = HeroButton(self.wrapper, text="ID : PID", size=8, bg="#7f37b0", activebg="#7f37b0",
+        self.parkid = HeroButton(self.wrapper, text=f"ID : {id}", size=8, bg="#7f37b0", activebg="#7f37b0",
                                  hoverbg="#7f37b0", fg=HERO_FOREGROUND, height=30, width=80)
         self.parkid.pack(side=tk.LEFT)
 
@@ -168,7 +168,7 @@ class Header(tk.Frame):
 
         self.onlyOwned = tk.IntVar()
         self.checkBox = ttk.Checkbutton(self, variable=self.onlyOwned, text="Only Owned?", width=12,
-                                        style="O.TCheckbutton", command=lambda: master.refresh_view(master.switch))
+                                        style="O.TCheckbutton", command=lambda: master.refresh_view(self.onlyOwned.get()))
         self.checkBox.pack(side="right", padx=5)
 
         self.blocks = ["", "All", "32", "34", "36",

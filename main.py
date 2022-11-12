@@ -108,27 +108,33 @@ class AvailableParking(tk.Frame):
 
         self.viewFrame = tk.Frame(self, bg="#323232")
         self.viewFrame.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
-        self.refresh_view()
+        self.refresh_view(0)
 
 
-    def refresh_view(self, switch):
+    def refresh_view(self, ownedOnly):
         self.viewFrame.destroy()
         self.viewFrame = tk.Frame(self, bg="#323232")
         self.viewFrame.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
-        self.populate()
+        self.populate('all', ownedOnly)
 
-    def populate(self):
-
+    def populate(self, block, ownedOnly):
+        if not ownedOnly:
+            self.data = utils.show_all_parking()
+        else:
+            self.data = utils.show_owned(USER)
         
-
-        self.card = widgets.Card(title="Block 34", isavailable=1, id=0, master=self.viewFrame)
-        self.card.pack(padx=5, pady=10)
-
-        self.card = widgets.Card(title="Block 34", isavailable=0, id=0, master=self.viewFrame)
-        self.card.pack(padx=5, pady=10)
-
-        self.card = widgets.Card(title="Block 34", isavailable=-1, id=0, master=self.viewFrame)
-        self.card.pack(padx=5, pady=10)
+        if self.data:
+            for self.i in self.data:
+                if self.i[2] == None:
+                    self.availibility = 0
+                elif self.i[2] == USER.__int__():
+                    self.availibility = -1
+                else:
+                    self.availibility = 1
+                    
+                widgets.Card(title=f"Block {self.i[1]}", isavailable=self.availibility, id=self.i[0], master=self.viewFrame).pack(padx=5, pady=10)
+        else:
+            tk.Label(self.viewFrame, text="Nothing to see here.", font='Helvetica 15 bold', bg="#323232", fg="#dddddd").pack(anchor='center', expand=True)
 
 
 
