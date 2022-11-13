@@ -6,21 +6,24 @@ import widgets
 import tkinter.messagebox as msg
 from PIL import ImageTk, Image
 
-#Activate 64 bit display
+# Activate 64 bit display
 windll.shcore.SetProcessDpiAwareness(1)
 
-#Global variables 
+# Global variables
 WIDTH = 1080
 HEIGHT = 680
 USER = None
 OCUUPIED = 0
 
-#Start Screen widget class
+# Start Screen widget class
+
+
 class StartScreen(tk.Frame):
     '''
     This class inherits from Tk.Frame and addds additional widgets inside frame.
     This class implements Start Screen window that will display Login and signin options.
     '''
+
     def __init__(self, master):
         self.master = master
         super().__init__(master, bg="#424242", height=HEIGHT)
@@ -32,11 +35,13 @@ class StartScreen(tk.Frame):
         self.pack(fill=tk.BOTH, expand=True)
 
         self.buttonFrame = tk.Frame(self, bg="#424242", height=HEIGHT)
-        self.buttonFrame.pack(anchor="center", expand=True, side=tk.LEFT, fill=tk.Y)
+        self.buttonFrame.pack(anchor="center", expand=True,
+                              side=tk.LEFT, fill=tk.Y)
 
         self.tophalf = tk.Frame(self.buttonFrame, bg="#424242")
         self.tophalf.pack(pady=(100, 0))
-        self.logo = Image.open("images/parking-logo.png").resize((int(250 * 1.5), 250))
+        self.logo = Image.open(
+            "images/parking-logo.png").resize((int(250 * 1.5), 250))
         self.logo = ImageTk.PhotoImage(self.logo)
         tk.Label(self.tophalf, image=self.logo, bg=self.tophalf["bg"]).pack()
 
@@ -44,18 +49,23 @@ class StartScreen(tk.Frame):
 
         self.formSpace.pack(side=tk.BOTTOM, expand=True, pady=10, anchor="n")
 
-        self.login = widgets.HeroButton(self.tophalf, "Login", size=12, command=self.login_clicked)
+        self.login = widgets.HeroButton(
+            self.tophalf, "Login", size=12, command=self.login_clicked)
         self.login.pack(side=tk.LEFT, padx=30)
 
-        self.signup = widgets.HeroButton(self.tophalf, "Signup", size=12, command=self.signup_clicked)
+        self.signup = widgets.HeroButton(
+            self.tophalf, "Signup", size=12, command=self.signup_clicked)
         self.signup.pack(side=tk.LEFT)
 
         self.bgimg = Image.open("images/parking.png")
         self.bgimg = ImageTk.PhotoImage(self.bgimg.resize((900, HEIGHT)))
-        tk.Label(self, image=self.bgimg, borderwidth=0, width=600).pack(side=tk.RIGHT)
+        tk.Label(self, image=self.bgimg, borderwidth=0,
+                 width=600).pack(side=tk.RIGHT)
 
-        self.loginForm = widgets.Login(command=self.submit_login,master=self.formSpace, fg="#fafafa", bg="#222222")
-        self.signupForm = widgets.Signup(command=self.submit_signup, master=self.formSpace, fg="#fafafa", bg="#222222")
+        self.loginForm = widgets.Login(
+            command=self.submit_login, master=self.formSpace, fg="#fafafa", bg="#222222")
+        self.signupForm = widgets.Signup(
+            command=self.submit_signup, master=self.formSpace, fg="#fafafa", bg="#222222")
 
     def show_login(self):
         self.loginForm.pack(ipadx=20, pady=10)
@@ -74,14 +84,16 @@ class StartScreen(tk.Frame):
         self.sign = 0
 
     def login_clicked(self):
-        if self.sign: self.collapse_signup()
+        if self.sign:
+            self.collapse_signup()
         if self.log:
             self.collapse_login()
         else:
             self.show_login()
 
     def signup_clicked(self):
-        if self.log: self.collapse_login()
+        if self.log:
+            self.collapse_login()
         if self.sign:
             self.collapse_signup()
         else:
@@ -90,16 +102,19 @@ class StartScreen(tk.Frame):
     def submit_login(self):
         '''Executes when clicked submit from login page. Verifies if user is authentic'''
         global USER, OCUUPIED
-        self.user = utils.verify_user(self.loginForm.username.entry.get(), self.loginForm.passname.entry.get())
+        self.user = utils.verify_user(
+            self.loginForm.username.entry.get(), self.loginForm.passname.entry.get())
         if self.user:
             USER = self.user[0]
-            utils.cursor.execute(f"select Count(*) from booking where Uid = {USER};")
+            utils.cursor.execute(
+                f"select Count(*) from booking where Uid = {USER};")
             OCUUPIED = utils.cursor.fetchone()[0]
             AvailableParking(master=root)
             self.destroy()
         else:
-            msg.showwarning("User login fail", message="Username and Password mismatch")
-        
+            msg.showwarning("User login fail",
+                            message="Username and Password mismatch")
+
     def submit_signup(self):
         """Executes when clicked submit from signup page
            verifies if data is valid or not 
@@ -109,21 +124,26 @@ class StartScreen(tk.Frame):
         self.password = self.signupForm.passname.entry.get()
         self.confirmpass = self.signupForm.confirmPass.entry.get()
 
-        self.verify = utils.verify_input(self.user, self.password, self.confirmpass)
+        self.verify = utils.verify_input(
+            self.user, self.password, self.confirmpass)
         if self.verify == -1:
-            msg.showwarning("Password Mismatch", message="Password and confirm password mismatch")
+            msg.showwarning("Password Mismatch",
+                            message="Password and confirm password mismatch")
         elif self.verify == -2:
             msg.showwarning("Existing user", message="User already exist!!")
         elif self.verify == 0:
             msg.showwarning("Invalid Username", message="Invalid Username")
         elif self.verify == -3:
-            msg.showwarning("Weak Password", message="Password length must be greater than 8 characters")
+            msg.showwarning(
+                "Weak Password", message="Password length must be greater than 8 characters")
         else:
             self.res = utils.add_user(self.user, self.password)
             if self.res:
-                msg.showinfo("Signup Successful", message="Regestration is succesful. You can login with your username now")
+                msg.showinfo(
+                    "Signup Successful", message="Regestration is succesful. You can login with your username now")
             else:
-                msg.showerror("Signup Unsuccessful", message="Couldn't Register")
+                msg.showerror("Signup Unsuccessful",
+                              message="Couldn't Register")
 
 
 class AvailableParking(tk.Frame):
@@ -138,9 +158,7 @@ class AvailableParking(tk.Frame):
 
         self.scframe = ScrollableFrame(self)
         self.viewFrame = self.scframe.view
-        # self.viewFrame.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
         self.refresh_view('all', 0)
-
 
     def refresh_view(self, block, ownedOnly):
         for i in self.viewFrame.winfo_children():
@@ -161,14 +179,15 @@ class AvailableParking(tk.Frame):
                     self.availibility = -1
                 else:
                     self.availibility = 1
-                    
-                self.card = widgets.Card(title=f"Block {self.i[1]}", isavailable=self.availibility, id=self.i[0], master=self.viewFrame)
-                self.card.pack(padx=5, pady=10)
-                self.viewFrame["height"]+= (self.card.winfo_reqheight() + 20)
-        else:
-            tk.Label(self.viewFrame, text="Nothing to see here.", font='Helvetica 15 bold', bg="#323232", fg="#dddddd").pack(anchor='center', expand=True, fill=tk.X)
-            self.viewFrame["height"] = HEIGHT-45
 
+                self.card = widgets.Card(
+                    title=f"Block {self.i[1]}", isavailable=self.availibility, id=self.i[0], master=self.viewFrame)
+                self.card.pack(padx=5, pady=10)
+                self.viewFrame["height"] += (self.card.winfo_reqheight() + 20)
+        else:
+            tk.Label(self.viewFrame, text="Nothing to see here.", font='Helvetica 15 bold',
+                     bg="#323232", fg="#dddddd").pack(anchor='center', expand=True, fill=tk.X)
+            self.viewFrame["height"] = HEIGHT-45
 
 
 class ScrollableFrame(tk.Frame):
@@ -176,25 +195,30 @@ class ScrollableFrame(tk.Frame):
         super().__init__(master, borderwidth=0, bg="#323232")
         self.pack(expand=True, fill=tk.BOTH, side=tk.BOTTOM)
 
-        self.scrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
+        self.scrollbar = ttk.Scrollbar(
+            self, orient=tk.VERTICAL, style="Vertical.TScrollbar")
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        self.canvas = tk.Canvas(self, borderwidth=0, yscrollcommand=self.scrollbar.set, bg="#323232", relief=tk.FLAT)
+        self.canvas = tk.Canvas(
+            self, borderwidth=0, yscrollcommand=self.scrollbar.set, bg="#323232", highlightthickness=0)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         self.scrollbar.config(command=self.canvas.yview)
 
-        #reset view area
+        # reset view area
         self.canvas.xview_moveto(0)
         self.canvas.yview_moveto(0)
 
-        self.view = tk.Frame(self.canvas, bg="#323232", width=WIDTH, height=HEIGHT-50, borderwidth=0)
+        self.view = tk.Frame(self.canvas, bg="#323232",
+                             width=WIDTH, height=HEIGHT-50, borderwidth=0)
         self.view.pack_propagate(0)
-        self.view_ref = self.canvas.create_window(0,0,window=self.view, anchor="nw")
+        self.view_ref = self.canvas.create_window(
+            10, 0, window=self.view, anchor="nw")
         self.view.bind("<Configure>", self.onScroll)
 
     def onScroll(self, event):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
 
 if __name__ == "__main__":
     root = tk.Tk()
@@ -203,9 +227,15 @@ if __name__ == "__main__":
     root.config(bg="#424242")
 
     style = ttk.Style()
-    style.configure("O.TMenubutton", background="#444444", foreground="#ffffff", borderwidth=0, relief="flat", width=5)
-    style.configure(("O.TCheckbutton"), background="#444444", foreground="#ffffff", borderwidth=0, relief="flat")
-    style.configure("TScrollbar", troughcolor="green")
+    print(style.theme_names())
+    style.theme_use("alt")
+    style.configure("O.TMenubutton", borderwidth=0, relief="flat", width=5)
+
+    style.map("O.TMenubutton", background=[("active", "#7f3bff"), ('!active', "#444444")], foreground=[
+              ("active", "white"), ("!active", "white")])
+
+    style.map("O.TCheckbutton", background=[("selected", "#8132db"), ("active", "#7f3bff"), ('!active', "#444444")], foreground=[
+              ("active", "white"), ("!active", "white")], indicatorcolor="black", padding=[("!active", 5), ("active", 5)])
 
     start = StartScreen(root)
     root.mainloop()
