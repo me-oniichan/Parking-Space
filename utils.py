@@ -7,10 +7,13 @@ def verify_user(user, password):
     else: 
         return False
 
-def show_all_parking():
-    cursor.execute("select * from parking_space left join booking on parking_space.pid = booking.pid;")
+def show_all_parking(block = 'all'):
+    condition = "" if block.lower() == 'all' else f" where block = {block}"
+    print(f"select * from parking_space left join booking on parking_space.pid = booking.pid{condition};")
+    cursor.execute(f"select * from parking_space left join booking on parking_space.pid = booking.pid{condition};")
     return cursor.fetchall()
 
-def show_owned(user):
-    cursor.execute(f"select * from parking_space left join booking on parking_space.pid = booking.pid where uid = {user};")
+def show_owned(user, block):
+    condition = "" if block.lower() == 'all' else f" and block = {block}"
+    cursor.execute(f"select * from parking_space left join booking on parking_space.pid = booking.pid where uid = {user}{condition};")
     return cursor.fetchall()

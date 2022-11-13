@@ -8,6 +8,7 @@ HERO_FOREGROUND = "#f5f0ff"
 ACTIVE_BG = "#b187ff"
 HOVER = "#965eff"
 
+
 class HeroButton(tk.Canvas):
     def __init__(self, master, text="Click ME", height=70, width=150, bg=HERO_BACKGROUND, fg=HERO_FOREGROUND,
                  command=None, activebg=ACTIVE_BG, hoverbg=HOVER, size=12):
@@ -91,8 +92,8 @@ class Login(tk.Frame):
                               font=self.font, show="*")
         self.passname.pack(side=tk.RIGHT)
 
-        self.submit = HeroButton(master=self, text="Submit", height=35, width=100, command = command,
-                   size=10).pack(side=tk.BOTTOM, pady=(10, 5))
+        self.submit = HeroButton(master=self, text="Submit", height=35, width=100, command=command,
+                                 size=10).pack(side=tk.BOTTOM, pady=(10, 5))
 
 
 class Signup(Login):
@@ -145,13 +146,16 @@ class Card(tk.Frame):
                                  hoverbg="#7f37b0", fg=HERO_FOREGROUND, height=30, width=80)
         self.parkid.pack(side=tk.LEFT)
 
-
         if isavailable == -1:
-            self.actionButton = tk.Button(self, text="Cancel", bg="#ee4444", fg="#eeeeee", activebackground="#ee4444", activeforeground="#eeeeee")
+            self.actionButton = tk.Button(
+                self, text="Cancel", bg="#ee4444", fg="#eeeeee", activebackground="#ee4444", activeforeground="#eeeeee")
         elif isavailable == 0:
-            self.actionButton = tk.Button(self, text="Book", cursor="X_cursor", state=tk.DISABLED, relief=tk.SUNKEN)
-        else: self.actionButton= tk.Button(self, text="Book", bg="#55cc55", fg="black", activebackground="#55cc55", activeforeground="black")
-        
+            self.actionButton = tk.Button(
+                self, text="Book", cursor="X_cursor", state=tk.DISABLED, relief=tk.SUNKEN)
+        else:
+            self.actionButton = tk.Button(
+                self, text="Book", bg="#55cc55", fg="black", activebackground="#55cc55", activeforeground="black")
+
         self.actionButton.config(font="Helvetica 10 bold", width=7, height=2)
         self.actionButton.pack(side=tk.RIGHT, padx=10)
 
@@ -168,7 +172,7 @@ class Header(tk.Frame):
 
         self.onlyOwned = tk.IntVar()
         self.checkBox = ttk.Checkbutton(self, variable=self.onlyOwned, text="Only Owned?", width=12,
-                                        style="O.TCheckbutton", command=lambda: master.refresh_view(self.onlyOwned.get()))
+                                        style="O.TCheckbutton", command=lambda: master.refresh_view(self.value.get(), self.onlyOwned.get()))
         self.checkBox.pack(side="right", padx=5)
 
         self.blocks = ["", "All", "32", "34", "36",
@@ -176,9 +180,11 @@ class Header(tk.Frame):
         self.value = tk.StringVar()
         self.value.set('All')
 
-        self.option = ttk.OptionMenu(self, self.value, *self.blocks)
+        self.option = ttk.OptionMenu(
+            self, self.value, *self.blocks, command=lambda e: master.refresh_view(self.value.get(), self.onlyOwned.get()))
         self.option.pack(side=tk.RIGHT, padx=10)
         self.option.config(style="O.TMenubutton", text="Choose Block")
 
-        self.occupied = tk.Label(self, text=f"Occupied : {occupied}/3", bg=self.bg, fg="#ffffff", font="Impact 11")
+        self.occupied = tk.Label(
+            self, text=f"Occupied : {occupied}/3", bg=self.bg, fg="#ffffff", font="Impact 11")
         self.occupied.pack(side=tk.RIGHT, padx=10)

@@ -108,21 +108,20 @@ class AvailableParking(tk.Frame):
 
         self.viewFrame = tk.Frame(self, bg="#323232")
         self.viewFrame.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
-        self.refresh_view(0)
+        self.refresh_view('all', 0)
 
 
-    def refresh_view(self, ownedOnly):
+    def refresh_view(self, block, ownedOnly):
         self.viewFrame.destroy()
         self.viewFrame = tk.Frame(self, bg="#323232")
         self.viewFrame.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
-        self.populate('all', ownedOnly)
+        self.populate(block, ownedOnly)
 
     def populate(self, block, ownedOnly):
         if not ownedOnly:
-            self.data = utils.show_all_parking()
+            self.data = utils.show_all_parking(block=block)
         else:
-            self.data = utils.show_owned(USER)
-        
+            self.data = utils.show_owned(USER, block)
         if self.data:
             for self.i in self.data:
                 if self.i[2] == None:
