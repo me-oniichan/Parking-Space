@@ -143,10 +143,9 @@ class AvailableParking(tk.Frame):
 
 
     def refresh_view(self, block, ownedOnly):
-        self.viewFrame.destroy()
-        self.viewFrame = tk.Frame(self.scframe.canvas, bg="#323232", bd=0)
-        self.scframe.display_frame(self.viewFrame)
-        # self.viewFrame.pack(expand=True, fill=tk.BOTH)
+        for i in self.viewFrame.winfo_children():
+            i.destroy()
+        self.viewFrame["height"] = 0
         self.populate(block, ownedOnly)
 
     def populate(self, block, ownedOnly):
@@ -163,9 +162,13 @@ class AvailableParking(tk.Frame):
                 else:
                     self.availibility = 1
                     
-                widgets.Card(title=f"Block {self.i[1]}", isavailable=self.availibility, id=self.i[0], master=self.viewFrame).pack(padx=5, pady=10)
+                self.card = widgets.Card(title=f"Block {self.i[1]}", isavailable=self.availibility, id=self.i[0], master=self.viewFrame)
+                self.card.pack(padx=5, pady=10)
+                self.viewFrame["height"]+= (self.card.winfo_reqheight() + 20)
         else:
-            tk.Label(self.viewFrame, text="Nothing to see here.", font='Helvetica 15 bold', bg="#323232", fg="#dddddd").pack(anchor='center', expand=True)
+            tk.Label(self.viewFrame, text="Nothing to see here.", font='Helvetica 15 bold', bg="#323232", fg="#dddddd").pack(anchor='center', expand=True, fill=tk.X)
+            self.viewFrame["height"] = HEIGHT-45
+
 
 
 class ScrollableFrame(tk.Frame):
@@ -176,7 +179,7 @@ class ScrollableFrame(tk.Frame):
         self.scrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        self.canvas = tk.Canvas(self, borderwidth=0, yscrollcommand=self.scrollbar.set, bg="#323232")
+        self.canvas = tk.Canvas(self, borderwidth=0, yscrollcommand=self.scrollbar.set, bg="#323232", relief=tk.FLAT)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         self.scrollbar.config(command=self.canvas.yview)
@@ -185,14 +188,10 @@ class ScrollableFrame(tk.Frame):
         self.canvas.xview_moveto(0)
         self.canvas.yview_moveto(0)
 
-        self.view = tk.Frame(self.canvas, bg="#323232", width=WIDTH)
-        self.view_ref = self.canvas.create_window(0,0,window=self.view, anchor="n")
-   
-    def display_frame(self, frame):
-        self.view = frame
-        frame.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
-        self.view_ref = self.canvas.create_window(0,0,window=frame, anchor="nw")
-        frame.bind("<Configure>", self.onScroll)
+        self.view = tk.Frame(self.canvas, bg="#323232", width=WIDTH, height=HEIGHT-50, borderwidth=0)
+        self.view.pack_propagate(0)
+        self.view_ref = self.canvas.create_window(0,0,window=self.view, anchor="nw")
+        self.view.bind("<Configure>", self.onScroll)
 
     def onScroll(self, event):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
