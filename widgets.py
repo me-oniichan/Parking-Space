@@ -175,8 +175,8 @@ class Header(tk.Frame):
                                         style="O.TCheckbutton", command=lambda: master.refresh_view(self.value.get(), self.onlyOwned.get()))
         self.checkBox.pack(side="right", padx=5)
 
-        self.blocks = ["", "All", "32", "34", "36",
-                       "37", "38", "54", "56", "58", "60"]
+        self.blocks = ["", "All", "30",
+                       "37", "38", "43", "56", "58", "60"]
         self.value = tk.StringVar()
         self.value.set('All')
 

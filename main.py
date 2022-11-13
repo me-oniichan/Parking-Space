@@ -3,6 +3,7 @@ from tkinter import ttk
 import utils
 from ctypes import windll
 import widgets
+import tkinter.messagebox as msg
 from PIL import ImageTk, Image
 
 #Activate 64 bit display
@@ -54,7 +55,7 @@ class StartScreen(tk.Frame):
         tk.Label(self, image=self.bgimg, borderwidth=0, width=600).pack(side=tk.RIGHT)
 
         self.loginForm = widgets.Login(command=self.submit_login,master=self.formSpace, fg="#fafafa", bg="#222222")
-        self.signupForm = widgets.Signup(command=self.submit_login, master=self.formSpace, fg="#fafafa", bg="#222222")
+        self.signupForm = widgets.Signup(command=self.submit_signup, master=self.formSpace, fg="#fafafa", bg="#222222")
 
     def show_login(self):
         self.loginForm.pack(ipadx=20, pady=10)
@@ -87,6 +88,7 @@ class StartScreen(tk.Frame):
             self.show_signup()
 
     def submit_login(self):
+        '''Executes when clicked submit from login page. Verifies if user is authentic'''
         global USER, OCUUPIED
         self.user = utils.verify_user(self.loginForm.username.entry.get(), self.loginForm.passname.entry.get())
         if self.user:
@@ -95,6 +97,33 @@ class StartScreen(tk.Frame):
             OCUUPIED = utils.cursor.fetchone()[0]
             AvailableParking(master=root)
             self.destroy()
+        else:
+            msg.showwarning("User login fail", message="Username and Password mismatch")
+        
+    def submit_signup(self):
+        """Executes when clicked submit from signup page
+           verifies if data is valid or not 
+        """
+        global USER, OCUUPIED
+        self.user = self.signupForm.username.entry.get()
+        self.password = self.signupForm.passname.entry.get()
+        self.confirmpass = self.signupForm.confirmPass.entry.get()
+
+        self.verify = utils.verify_input(self.user, self.password, self.confirmpass)
+        if self.verify == -1:
+            msg.showwarning("Password Mismatch", message="Password and confirm password mismatch")
+        elif self.verify == -2:
+            msg.showwarning("Existing user", message="User already exist!!")
+        elif self.verify == 0:
+            msg.showwarning("Invalid Username", message="Invalid Username")
+        elif self.verify == -3:
+            msg.showwarning("Weak Password", message="Password length must be greater than 8 characters")
+        else:
+            self.res = utils.add_user(self.user, self.password)
+            if self.res:
+                msg.showinfo("Signup Successful", message="Regestration is succesful. You can login with your username now")
+            else:
+                msg.showerror("Signup Unsuccessful", message="Couldn't Register")
 
 
 class AvailableParking(tk.Frame):
