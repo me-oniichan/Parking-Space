@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import font
 from tkinter import ttk
-import utils
 
 HERO_BACKGROUND = "#7f3bff"
 HERO_FOREGROUND = "#f5f0ff"
@@ -121,7 +120,6 @@ class Card(tk.Frame):
             self.fg = "#77ff77"
             self.text = "Available"
             self.cardbg = "#424242"
-
         elif isavailable == -1:
             self.bg = "#00607d"
             self.fg = "#21f4ff"

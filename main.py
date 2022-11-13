@@ -128,22 +128,25 @@ class StartScreen(tk.Frame):
 
 class AvailableParking(tk.Frame):
     def __init__(self, master):
-        super().__init__(master, bg="#323232", height=HEIGHT,)
+        super().__init__(master, bg="#323232", height=HEIGHT, width=WIDTH)
+        self.pack_propagate(False)
         self.card = None
         self.pack(fill=tk.BOTH, expand=True, ipadx=20, ipady=20)
 
         self.head = widgets.Header(self, user=USER, occupied=OCUUPIED)
         self.head.pack()
 
-        self.viewFrame = tk.Frame(self, bg="#323232")
-        self.viewFrame.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
+        self.scframe = ScrollableFrame(self)
+        self.viewFrame = self.scframe.view
+        # self.viewFrame.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
         self.refresh_view('all', 0)
 
 
     def refresh_view(self, block, ownedOnly):
         self.viewFrame.destroy()
-        self.viewFrame = tk.Frame(self, bg="#323232")
-        self.viewFrame.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
+        self.viewFrame = tk.Frame(self.scframe.canvas, bg="#323232", bd=0)
+        self.scframe.display_frame(self.viewFrame)
+        # self.viewFrame.pack(expand=True, fill=tk.BOTH)
         self.populate(block, ownedOnly)
 
     def populate(self, block, ownedOnly):
@@ -165,6 +168,34 @@ class AvailableParking(tk.Frame):
             tk.Label(self.viewFrame, text="Nothing to see here.", font='Helvetica 15 bold', bg="#323232", fg="#dddddd").pack(anchor='center', expand=True)
 
 
+class ScrollableFrame(tk.Frame):
+    def __init__(self, master):
+        super().__init__(master, borderwidth=0, bg="#323232")
+        self.pack(expand=True, fill=tk.BOTH, side=tk.BOTTOM)
+
+        self.scrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
+        self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self.canvas = tk.Canvas(self, borderwidth=0, yscrollcommand=self.scrollbar.set, bg="#323232")
+        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        self.scrollbar.config(command=self.canvas.yview)
+
+        #reset view area
+        self.canvas.xview_moveto(0)
+        self.canvas.yview_moveto(0)
+
+        self.view = tk.Frame(self.canvas, bg="#323232", width=WIDTH)
+        self.view_ref = self.canvas.create_window(0,0,window=self.view, anchor="n")
+   
+    def display_frame(self, frame):
+        self.view = frame
+        frame.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH)
+        self.view_ref = self.canvas.create_window(0,0,window=frame, anchor="nw")
+        frame.bind("<Configure>", self.onScroll)
+
+    def onScroll(self, event):
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
 if __name__ == "__main__":
     root = tk.Tk()
@@ -175,6 +206,7 @@ if __name__ == "__main__":
     style = ttk.Style()
     style.configure("O.TMenubutton", background="#444444", foreground="#ffffff", borderwidth=0, relief="flat", width=5)
     style.configure(("O.TCheckbutton"), background="#444444", foreground="#ffffff", borderwidth=0, relief="flat")
+    style.configure("TScrollbar", troughcolor="green")
 
     start = StartScreen(root)
     root.mainloop()
