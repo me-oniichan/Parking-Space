@@ -227,7 +227,6 @@ if __name__ == "__main__":
     root.config(bg="#424242")
 
     style = ttk.Style()
-    print(style.theme_names())
     style.theme_use("alt")
     style.configure("O.TMenubutton", borderwidth=0, relief="flat", width=5)
 
@@ -236,6 +235,9 @@ if __name__ == "__main__":
 
     style.map("O.TCheckbutton", background=[("selected", "#8132db"), ("active", "#7f3bff"), ('!active', "#444444")], foreground=[
               ("active", "white"), ("!active", "white")], indicatorcolor="black", padding=[("!active", 5), ("active", 5)])
+
+    style.map("TScrollbar", background = [("active", "#5c5c5c"), ("!active", "#4f4f4f")])
+    style.configure("TScrollbar", troughcolor = "#363636", relief = "flat", arrowcolor = "#4f4f4f", lightcolor="#363636")
 
     start = StartScreen(root)
     root.mainloop()
