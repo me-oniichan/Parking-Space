@@ -145,14 +145,14 @@ class Card(tk.Frame):
         self.parkid.pack(side=tk.LEFT)
 
         #Action Buttons
+        self.mainFrame = self.master.master.master.master
         if isavailable == -1:
             self.actionButton = tk.Button(
-                self, text="Cancel", bg="#ee4444", fg="#eeeeee", activebackground="#ee4444", activeforeground="#eeeeee")
+                self, text="Cancel", bg="#ee4444", fg="#eeeeee", activebackground="#ee4444", activeforeground="#eeeeee", command=lambda : self.mainFrame.send_cancelreq(id))
         elif isavailable == 0:
             self.actionButton = tk.Button(
                 self, text="Book", cursor="X_cursor", state=tk.DISABLED, relief=tk.SUNKEN)
         else:
-            self.mainFrame = self.master.master.master.master
             self.actionButton = tk.Button(
                 self, text="Book", bg="#55cc55", fg="black", activebackground="#55cc55", activeforeground="black", command=lambda : self.mainFrame.send_bookreq(id))
 

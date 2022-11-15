@@ -199,7 +199,16 @@ class AvailableParking(tk.Frame):
                 OCUUPIED+=1
                 self.head.occupied["text"] = f"Occupied : {OCUUPIED}/3"
                 self.refresh_view(self.head.value.get(), self.head.onlyOwned.get())
-        
+
+    def send_cancelreq(self, pid):
+        global OCUUPIED
+        self.confirm = msg.askyesno("Confirmation", message="Do you really want to cance? 70% of your deposit with be refunded")
+        if self.confirm:
+            if utils.cancel(USER, pid):
+                OCUUPIED-=1
+                self.head.occupied["text"] = f"Occupied : {OCUUPIED}/3"
+                self.refresh_view(self.head.value.get(), self.head.onlyOwned.get())
+
 
 class ScrollableFrame(tk.Frame):
     def __init__(self, master):

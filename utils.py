@@ -46,5 +46,11 @@ def book(uid, pid):
         db.commit()
         return True
     except Exception as e:
-        print(e)
+        return False
+def cancel(uid, pid):
+    try:
+        cursor.execute(f"delete from booking where pid='{pid}' and uid ={uid}")
+        db.commit()
+        return True
+    except:
         return False
