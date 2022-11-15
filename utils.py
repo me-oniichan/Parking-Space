@@ -45,8 +45,9 @@ def book(uid, pid):
         cursor.execute(f"insert into booking values({uid}, '{pid}', now(), {dt.now().hour}{dt.now().minute});")
         db.commit()
         return True
-    except Exception as e:
+    except:
         return False
+
 def cancel(uid, pid):
     try:
         cursor.execute(f"delete from booking where pid='{pid}' and uid ={uid}")
