@@ -1,5 +1,5 @@
 from databse import *
-
+from datetime import datetime as dt
 
 def verify_user(user, password):
     if not user.isdigit(): return False  ##if formate is false, reject
@@ -9,7 +9,6 @@ def verify_user(user, password):
         return data
     else: 
         return False
-
 
 def add_user(user, password):
     try:
@@ -40,3 +39,12 @@ def show_owned(user, block):
     condition = "" if block.lower() == 'all' else f" and block = {block}"
     cursor.execute(f"select * from parking_space left join booking on parking_space.pid = booking.pid where uid = {user}{condition};")
     return cursor.fetchall()
+
+def book(uid, pid):
+    try:
+        cursor.execute(f"insert into booking values({uid}, '{pid}', now(), {dt.now().hour}{dt.now().minute});")
+        db.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False

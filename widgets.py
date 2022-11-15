@@ -144,6 +144,7 @@ class Card(tk.Frame):
                                  hoverbg="#7f37b0", fg=HERO_FOREGROUND, height=30, width=80)
         self.parkid.pack(side=tk.LEFT)
 
+        #Action Buttons
         if isavailable == -1:
             self.actionButton = tk.Button(
                 self, text="Cancel", bg="#ee4444", fg="#eeeeee", activebackground="#ee4444", activeforeground="#eeeeee")
@@ -151,8 +152,9 @@ class Card(tk.Frame):
             self.actionButton = tk.Button(
                 self, text="Book", cursor="X_cursor", state=tk.DISABLED, relief=tk.SUNKEN)
         else:
+            self.mainFrame = self.master.master.master.master
             self.actionButton = tk.Button(
-                self, text="Book", bg="#55cc55", fg="black", activebackground="#55cc55", activeforeground="black")
+                self, text="Book", bg="#55cc55", fg="black", activebackground="#55cc55", activeforeground="black", command=lambda : self.mainFrame.send_bookreq(id))
 
         self.actionButton.config(font="Helvetica 10 bold", width=7, height=2)
         self.actionButton.pack(side=tk.RIGHT, padx=10)

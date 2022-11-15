@@ -14,10 +14,9 @@ WIDTH = 1080
 HEIGHT = 680
 USER = None
 OCUUPIED = 0
+WINDOW = None
 
 # Start Screen widget class
-
-
 class StartScreen(tk.Frame):
     '''
     This class inherits from Tk.Frame and addds additional widgets inside frame.
@@ -101,7 +100,7 @@ class StartScreen(tk.Frame):
 
     def submit_login(self):
         '''Executes when clicked submit from login page. Verifies if user is authentic'''
-        global USER, OCUUPIED
+        global USER, OCUUPIED, WINDOW
         self.user = utils.verify_user(
             self.loginForm.username.entry.get(), self.loginForm.passname.entry.get())
         if self.user:
@@ -109,7 +108,7 @@ class StartScreen(tk.Frame):
             utils.cursor.execute(
                 f"select Count(*) from booking where Uid = {USER};")
             OCUUPIED = utils.cursor.fetchone()[0]
-            AvailableParking(master=root)
+            WINDOW = AvailableParking(master=root)
             self.destroy()
         else:
             msg.showwarning("User login fail",
@@ -174,11 +173,11 @@ class AvailableParking(tk.Frame):
         if self.data:
             for self.i in self.data:
                 if self.i[2] == None:
-                    self.availibility = 0
+                    self.availibility = 1
                 elif self.i[2] == USER.__int__():
                     self.availibility = -1
                 else:
-                    self.availibility = 1
+                    self.availibility = 0
 
                 self.card = widgets.Card(
                     title=f"Block {self.i[1]}", isavailable=self.availibility, id=self.i[0], master=self.viewFrame)
@@ -189,6 +188,18 @@ class AvailableParking(tk.Frame):
                      bg="#323232", fg="#dddddd").pack(anchor='center', expand=True, fill=tk.X)
             self.viewFrame["height"] = HEIGHT-45
 
+    def send_bookreq(self, pid):
+        global OCUUPIED
+        if OCUUPIED >= 3:
+            msg.showerror("Failed", message="You ave already done maximum bookings.")
+            return
+        self.confirm = msg.askyesno("Continue?", message="Do you want to book this slot for Rs.50?")
+        if self.confirm:
+            if utils.book(USER, pid):
+                OCUUPIED+=1
+                self.head.occupied["text"] = f"Occupied : {OCUUPIED}/3"
+                self.refresh_view(self.head.value.get(), self.head.onlyOwned.get())
+        
 
 class ScrollableFrame(tk.Frame):
     def __init__(self, master):
@@ -226,6 +237,7 @@ if __name__ == "__main__":
     root.resizable(False, False)
     root.config(bg="#424242")
 
+   #Styling for ttk widgets
     style = ttk.Style()
     style.theme_use("alt")
     style.configure("O.TMenubutton", borderwidth=0, relief="flat", width=5)
@@ -239,5 +251,5 @@ if __name__ == "__main__":
     style.map("TScrollbar", background = [("active", "#5c5c5c"), ("!active", "#4f4f4f")])
     style.configure("TScrollbar", troughcolor = "#363636", relief = "flat", arrowcolor = "#4f4f4f", lightcolor="#363636")
 
-    start = StartScreen(root)
+    WINDOW = StartScreen(root)
     root.mainloop()
