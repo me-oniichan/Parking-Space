@@ -244,7 +244,7 @@ if __name__ == "__main__":
     root.geometry(f"{WIDTH}x{HEIGHT}")
     root.resizable(False, False)
     root.config(bg="#424242")
-
+    root.title("Parking System")
    #Styling for ttk widgets
     style = ttk.Style()
     style.theme_use("alt")
@@ -261,3 +261,6 @@ if __name__ == "__main__":
 
     WINDOW = StartScreen(root)
     root.mainloop()
+
+    utils.cursor.close()
+    utils.db.close()

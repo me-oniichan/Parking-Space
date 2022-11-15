@@ -59,6 +59,7 @@ try:
     win = tk.Tk()
     win.protocol("WM_DELETE_WINDOW", on_closing)
     win.config(padx=20, pady=20)
+    win.title("Mysql Connector")
     frame1 = tk.Frame(win)
     frame1.pack()
 
