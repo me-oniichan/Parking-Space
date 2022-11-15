@@ -1,8 +1,10 @@
 import os
+import random as rn
 import tkinter as tk
 import tkinter.messagebox as msg
-from tkinter import ttk
 from ctypes import windll
+from tkinter import ttk
+from uuid import uuid4
 
 # Activate 64 bit display
 windll.shcore.SetProcessDpiAwareness(1)
@@ -37,6 +39,22 @@ def verify_tables(cur):
         cur.execute("create table user(Uid int primary key, Name varchar(25), created date, password varchar(25));")
         cur.execute("create table parking_space(Pid char(4) primary key, block int);")
         cur.execute("create table booking(Uid int, Pid char(4) primary key, date date, time int, constraint fk_uid foreign key (Uid) REFERENCES user(Uid), constraint fk_pid foreign key (Pid) REFERENCES parking_space(Pid));")
+
+        ##pupulate fake data into database
+        for i in range(100):
+            cursor.execute(f"insert into user values({12114100 + i}, '{str(uuid4())[:5]}', '2022-11-10', '123456');")
+        db.commit()
+
+        mylist = ["37", "38", "43", "56", "58", "60"]
+        ids = []
+        for i in range(20):
+            id = str(uuid4())[:4]
+            ids.append(id)
+            cursor.execute(f"insert into parking_space values('{id}', '{rn.choice(mylist)}');")
+
+        for i in range(10):
+            cursor.execute(f"insert into booking values({12114100 + i}, '{ids[i]}', '2022-11-10', {1300+i})")
+        db.commit()
     except:
         pass
 
