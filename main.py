@@ -1,13 +1,12 @@
 import tkinter as tk
-from tkinter import ttk
-import utils
-from ctypes import windll
-import widgets
 import tkinter.messagebox as msg
-from PIL import ImageTk, Image
+from tkinter import ttk
 
-# Activate 64 bit display
-windll.shcore.SetProcessDpiAwareness(1)
+from PIL import Image, ImageTk
+
+import utils
+import widgets
+
 
 # Global variables
 WIDTH = 1080
@@ -49,11 +48,11 @@ class StartScreen(tk.Frame):
         self.formSpace.pack(side=tk.BOTTOM, expand=True, pady=10, anchor="n")
 
         self.login = widgets.HeroButton(
-            self.tophalf, "Login", size=14, command=self.login_clicked)
+            self.tophalf, "Login", size=12, command=self.login_clicked)
         self.login.pack(side=tk.LEFT, padx=30)
 
         self.signup = widgets.HeroButton(
-            self.tophalf, "Signup", size=14, command=self.signup_clicked)
+            self.tophalf, "Signup", size=12, command=self.signup_clicked)
         self.signup.pack(side=tk.LEFT)
 
         self.bgimg = Image.open("images/parking.png")

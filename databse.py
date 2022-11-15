@@ -1,9 +1,15 @@
-import tkinter.messagebox as msg
-import tkinter as tk
-from tkinter import ttk
 import os
+import tkinter as tk
+import tkinter.messagebox as msg
+from tkinter import ttk
+from ctypes import windll
+
+# Activate 64 bit display
+windll.shcore.SetProcessDpiAwareness(1)
+
 try:
     import mysql.connector as connection
+    from mysql.connector import errorcode
 except ImportError:
     #if mysql connector not installed
     err = msg.askyesno("Connection Error", message="mysql-connector not installed, Do you want to install?")
@@ -14,17 +20,45 @@ except ImportError:
 
 cursor = None
 db = None
+
+def on_closing():
+    exit()
+
+def select_database(cur):
+    try:
+        cur.execute("create database parking;")
+    except:
+        pass
+    finally:
+        cur.execute("use parking;")
+
+def verify_tables(cur):
+    try:
+        cur.execute("create table user(Uid int primary key, Name varchar(25), created date, password varchar(25));")
+        cur.execute("create table parking_space(Pid char(4) primary key, block int);")
+        cur.execute("create table booking(Uid int, Pid char(4) primary key, date date, time int, constraint fk_uid foreign key (Uid) REFERENCES user(Uid), constraint fk_pid foreign key (Pid) REFERENCES parking_space(Pid));")
+    except:
+        pass
+
 def connect(username, password):
     global cursor, db
     try:
-        db = connection.connect(user=username, password=password, database="Parking")
+        db = connection.connect(user=username, password=password)
         cursor = db.cursor()
+        select_database(cur=cursor)
+        verify_tables(cursor)
         win.destroy()
-    except:
-        msg.showerror("Error", message="Invalid credentials")
+    except connection.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            msg.showerror("Error", message="Invalid credentials")
+        else:
+            print(err)
+            msg.showerror("Error", message="Corrupt mysql installation")
 
 try:
     win = tk.Tk()
+    win.protocol("WM_DELETE_WINDOW", on_closing)
+    win.config(padx=20, pady=20)
     frame1 = tk.Frame(win)
     frame1.pack()
 
@@ -35,11 +69,11 @@ try:
     username = ttk.Entry(frame1)
     username.pack(side=tk.RIGHT, padx=5, pady=5)
 
-    ttk.Label(frame2, text="Password : ").pack(side=tk.LEFT)
+    ttk.Label(frame2, text="Password :  ").pack(side=tk.LEFT)
     password = ttk.Entry(frame2, show="*")
     password.pack(side=tk.RIGHT, padx=5, pady=5)
 
-    submit = tk.Button(win, text="Submit", command= lambda : connect(username.get(), password.get())).pack()
+    submit = ttk.Button(win, text="Submit", command= lambda : connect(username.get(), password.get())).pack(pady=(20,5))
     win.mainloop()
 except Exception as e:
     msg.showerror("Connection Error", message="Unable to connect MySQL")
