@@ -13,7 +13,7 @@ windll.shcore.SetProcessDpiAwareness(1)
 WIDTH = 1080
 HEIGHT = 680
 USER = None
-OCUUPIED = 0
+OCCUPIED = 0
 WINDOW = None
 
 # Start Screen widget class
@@ -49,11 +49,11 @@ class StartScreen(tk.Frame):
         self.formSpace.pack(side=tk.BOTTOM, expand=True, pady=10, anchor="n")
 
         self.login = widgets.HeroButton(
-            self.tophalf, "Login", size=12, command=self.login_clicked)
+            self.tophalf, "Login", size=14, command=self.login_clicked)
         self.login.pack(side=tk.LEFT, padx=30)
 
         self.signup = widgets.HeroButton(
-            self.tophalf, "Signup", size=12, command=self.signup_clicked)
+            self.tophalf, "Signup", size=14, command=self.signup_clicked)
         self.signup.pack(side=tk.LEFT)
 
         self.bgimg = Image.open("images/parking.png")
@@ -100,14 +100,14 @@ class StartScreen(tk.Frame):
 
     def submit_login(self):
         '''Executes when clicked submit from login page. Verifies if user is authentic'''
-        global USER, OCUUPIED, WINDOW
+        global USER, OCCUPIED, WINDOW
         self.user = utils.verify_user(
             self.loginForm.username.entry.get(), self.loginForm.passname.entry.get())
         if self.user:
             USER = self.user[0]
             utils.cursor.execute(
                 f"select Count(*) from booking where Uid = {USER};")
-            OCUUPIED = utils.cursor.fetchone()[0]
+            OCCUPIED = utils.cursor.fetchone()[0]
             WINDOW = AvailableParking(master=root)
             self.destroy()
         else:
@@ -118,7 +118,7 @@ class StartScreen(tk.Frame):
         """Executes when clicked submit from signup page
            verifies if data is valid or not 
         """
-        global USER, OCUUPIED
+        global USER, OCCUPIED
         self.user = self.signupForm.username.entry.get()
         self.password = self.signupForm.passname.entry.get()
         self.confirmpass = self.signupForm.confirmPass.entry.get()
@@ -152,7 +152,7 @@ class AvailableParking(tk.Frame):
         self.card = None
         self.pack(fill=tk.BOTH, expand=True, ipadx=20, ipady=20)
 
-        self.head = widgets.Header(self, user=USER, occupied=OCUUPIED)
+        self.head = widgets.Header(self, user=USER, occupied=OCCUPIED)
         self.head.pack()
 
         self.scframe = ScrollableFrame(self)
@@ -189,24 +189,24 @@ class AvailableParking(tk.Frame):
             self.viewFrame["height"] = HEIGHT-45
 
     def send_bookreq(self, pid):
-        global OCUUPIED
-        if OCUUPIED >= 3:
+        global OCCUPIED
+        if OCCUPIED >= 3:
             msg.showerror("Failed", message="You ave already done maximum bookings.")
             return
         self.confirm = msg.askyesno("Continue?", message="Do you want to book this slot for Rs.50?")
         if self.confirm:
             if utils.book(USER, pid):
-                OCUUPIED+=1
-                self.head.occupied["text"] = f"Occupied : {OCUUPIED}/3"
+                OCCUPIED+=1
+                self.head.occupied["text"] = f"Occupied : {OCCUPIED}/3"
                 self.refresh_view(self.head.value.get(), self.head.onlyOwned.get())
 
     def send_cancelreq(self, pid):
-        global OCUUPIED
+        global OCCUPIED
         self.confirm = msg.askyesno("Confirmation", message="Do you really want to cance? 70% of your deposit with be refunded")
         if self.confirm:
             if utils.cancel(USER, pid):
-                OCUUPIED-=1
-                self.head.occupied["text"] = f"Occupied : {OCUUPIED}/3"
+                OCCUPIED-=1
+                self.head.occupied["text"] = f"Occupied : {OCCUPIED}/3"
                 self.refresh_view(self.head.value.get(), self.head.onlyOwned.get())
 
 

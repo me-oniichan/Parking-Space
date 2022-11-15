@@ -72,7 +72,7 @@ class Entry(tk.Frame):
 class Login(tk.Frame):
     def __init__(self, command, fg, **kwargs):
         super().__init__(**kwargs)
-        self.font = font.Font(family="Consolas", size=10)
+        self.font = font.Font(family="Consolas", size=12)
         self.userFrame = tk.Frame(self, bg=kwargs["bg"])
         self.userFrame.pack(pady=3)
 
@@ -92,7 +92,7 @@ class Login(tk.Frame):
         self.passname.pack(side=tk.RIGHT)
 
         self.submit = HeroButton(master=self, text="Submit", height=35, width=100, command=command,
-                                 size=10).pack(side=tk.BOTTOM, pady=(10, 5))
+                                 size=12).pack(side=tk.BOTTOM, pady=(10, 5))
 
 
 class Signup(Login):
@@ -136,11 +136,11 @@ class Card(tk.Frame):
                               bg=self.cardbg)
         self.title.pack(anchor="w", padx=(20, 0), pady=(0, 5))
 
-        self.available = HeroButton(self.wrapper, text=self.text, size=8, bg=self.bg, fg=self.fg, height=30, width=100,
+        self.available = HeroButton(self.wrapper, text=self.text, size=10, bg=self.bg, fg=self.fg, height=30, width=100,
                                     activebg=self.bg, hoverbg=self.bg)
         self.available.pack(side=tk.LEFT, padx=(20, 8))
 
-        self.parkid = HeroButton(self.wrapper, text=f"ID : {id}", size=8, bg="#7f37b0", activebg="#7f37b0",
+        self.parkid = HeroButton(self.wrapper, text=f"ID : {id}", size=10, bg="#7f37b0", activebg="#7f37b0",
                                  hoverbg="#7f37b0", fg=HERO_FOREGROUND, height=30, width=80)
         self.parkid.pack(side=tk.LEFT)
 

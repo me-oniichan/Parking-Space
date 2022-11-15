@@ -2,7 +2,7 @@ from databse import *
 from datetime import datetime as dt
 
 def verify_user(user, password):
-    if not user.isdigit(): return False  ##if formate is false, reject
+    if not user.isdigit(): return False  #if formate is false, reject
     cursor.execute(f"select Uid from user where password = '{password}' and Uid = {user}")
     data= cursor.fetchone()
     if data is not None:
