@@ -36,13 +36,13 @@ def select_database(cur):
 
 def verify_tables(cur):
     try:
-        cur.execute("create table user(Uid int primary key, created date, password varchar(25));")
-        cur.execute("create table parking_space(Pid char(4) primary key, block int);")
-        cur.execute("create table booking(Uid int, Pid char(4) primary key, date date, time int, constraint fk_uid foreign key (Uid) REFERENCES user(Uid), constraint fk_pid foreign key (Pid) REFERENCES parking_space(Pid));")
+        cur.execute("create table user if not exists (Uid int primary key, created date, password varchar(25));")
+        cur.execute("create table parking_space if not exists (Pid char(4) primary key, block int);")
+        cur.execute("create table booking if not exists (Uid int, Pid char(4) primary key, date date, time int, constraint fk_uid foreign key (Uid) REFERENCES user(Uid), constraint fk_pid foreign key (Pid) REFERENCES parking_space(Pid));")
 
         ##pupulate fake data into database
         for i in range(100):
-            cursor.execute(f"insert into user values({12114100 + i}, '{str(uuid4())[:5]}', '2022-11-10', '123456');")
+            cursor.execute(f"insert into user values({12114100 + i}, now(), '123456');")
         db.commit()
 
         mylist = ["37", "38", "43", "56", "58", "60"]
