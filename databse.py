@@ -36,7 +36,7 @@ def select_database(cur):
 
 def verify_tables(cur):
     try:
-        cur.execute("create table user(Uid int primary key, Name varchar(25), created date, password varchar(25));")
+        cur.execute("create table user(Uid int primary key, created date, password varchar(25));")
         cur.execute("create table parking_space(Pid char(4) primary key, block int);")
         cur.execute("create table booking(Uid int, Pid char(4) primary key, date date, time int, constraint fk_uid foreign key (Uid) REFERENCES user(Uid), constraint fk_pid foreign key (Pid) REFERENCES parking_space(Pid));")
 
