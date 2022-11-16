@@ -12,7 +12,7 @@ def verify_user(user, password):
 
 def add_user(user, password):
     try:
-        cursor.execute(f"insert into user values({user}, now(), '{password}')")
+        cursor.execute(f"insert into user values({user},'{password}')")
         db.commit()
         return True
     except:
