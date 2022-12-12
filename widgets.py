@@ -40,7 +40,7 @@ class HeroButton(tk.Canvas):
         self.bind("<Enter>", self.enter)
         self.bind("<Leave>", self.leave)
         self.bind("<Button-1>", self.click)
-        self.bind("<ButtonRelease-1>", self.leave)
+        self.bind("<ButtonRelease-1>", self.leave) 
 
     def enter(self, event):
         self.config(bg=self.hoverbg)
